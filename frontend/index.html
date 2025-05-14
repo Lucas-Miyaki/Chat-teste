@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=send" />
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Rekhiam</title>
+</head>
+<body>
+    <section class="container">
+
+        
+        <section class="login">
+            <h2>Login</h2>
+            <form class="login__form">
+                <input type="text" class="login__input" placeholder="Seu nome" required>
+                <button type="submit" class="login__button">Entrar</button>
+            </form>
+        </section>
+        
+
+        <section class="chat">
+
+            <section class="chat__messages">
+
+            </section>
+            <section class="preview">
+                <img id="output" width="200" />
+                <video id="videoPreview" controls width="200" style="display: none;"></video>
+                <audio id="audioPreview" controls width="200" style="display: none;"></audio>
+                <a id="fileLink" href="#" target="_blank" style="display: none;">Arquivo enviado</a>
+                <iframe id="pdfPreview" style="display: none; width: 100%; height: 430px; border: 10x solid #ccc; margin-top: 10px;"></iframe>
+            </section>
+            
+            <form class="chat__form">
+                <select id="recipientSelector">
+                    <option value="">Público (Todos)</option>
+                </select>
+            <input type="text" class="chat__input" placeholder="Digite uma mensagem" required>
+
+            <!-- Botões de Ação -->
+            <div class="chat__tools">
+                <button type="button" onclick="toggleColors()">Mudar Cores</button>       
+                <button type="button" onclick="toggleEmojiPicker()">Emojis</button>     
+                <button type="button" onclick="toggleGallery()">Figurinhas</button>
+                <button type="button" onclick="toggleUploads()">Enviar Arquivos</button>
+            </div>
+
+            <!--Mudar as Cores do Site-->
+
+            <div id="changeColor" style="display: none;" class="color-change">
+                <input type="color" id="backgroundColorPicker" title="Cor de fundo">
+                <input type="color" id="textColorPicker" title="Cor do texto">
+                <input type="color" id="primaryColorPicker" title="Cor principal">
+            </div>
+
+            <div id="emojiPicker" style="display: none; position: absolute; bottom: 120px; background: #222; border: 1px solid #444; padding: 10px; border-radius: 5px;"></div>
+  
+            <!-- Galeria de Figurinhas -->
+            <div id="imageGallery" style="display: none;" class="image-gallery">
+                <img src="./stickers/fundo-de-estrelas.jpg" onclick="selectSiteImage('./stickers/fundo-de-estrelas.jpg')" class="selectable-image" />
+                <img src="./stickers/OT2.jpg" onclick="selectSiteImage('./stickers/OT2.jpg')" class="selectable-image" />
+                <img src="./stickers/OT2-1.jpg" onclick="selectSiteImage('./stickers/OT2-1.jpg')" class="selectable-image" />
+            </div>
+            
+            <!-- Uploads -->
+            <div id="uploadFields" style="display: none;">
+
+                <input type="file" accept="image/*" id="file" onchange="loadFile(event)" style="display: none;">
+                <label for="file" style="cursor: pointer;"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z"/></svg></label>
+
+
+                <input type="file" accept="image/gif" id="gifFile" onchange="previewGif()" style="display: none;">
+                <label for="gifFile" style="cursor: pointer;"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M160-280q-33 0-56.5-23.5T80-360v-240q0-33 23.5-56.5T160-680h160q33 0 56.5 23.5T400-600H160v240h160v-80h-80v-80h160v160q0 33-23.5 56.5T320-280H160Zm320 0v-400h80v400h-80Zm160 0v-400h280v80H720v80h160v80H720v160h-80Z"/></svg></label>
+                
+            
+                <input type="file" accept="video/*" id="videoFile" onchange="previewVideo()" style="display: none;">
+                <label for="videoFile" style="cursor: pointer;"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m160-800 80 160h120l-80-160h80l80 160h120l-80-160h80l80 160h120l-80-160h120q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800Zm0 240v320h640v-320H160Zm0 0v320-320Z"/></svg></label>
+
+                <input type="file" accept="audio/*" id="audioFile" onchange="previewAudio(), revealAudio()"  style="display: none;">
+                <label for="audioFile" style="cursor: pointer;"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M400-120q-66 0-113-47t-47-113q0-66 47-113t113-47q23 0 42.5 5.5T480-418v-422h240v160H560v400q0 66-47 113t-113 47Z"/></svg></label>
+                
+            
+                <input type="file" name="file" id="genericFile" accept=".pdf, .txt, .zip, .docx" onchange="handleGenericFile()" style="display: none;">
+                <label for="genericFile" style="cursor: pointer;"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg></label>
+                
+            </div>
+            <button type="submit" class="chat__button">
+                <span class="material-symbols-outlined">send</span>
+            </button>
+            </form>
+        </section>
+    </section>
+    <script src="./js/script.js"></script>
+</body>
+</html>
